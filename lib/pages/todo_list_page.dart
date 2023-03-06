@@ -2,10 +2,17 @@
 
 import 'package:flutter/material.dart';
 
-class TodoListPage extends StatelessWidget {
+class TodoListPage extends StatefulWidget {
   TodoListPage({Key? key}) : super(key: key);
 
-  final TextEditingController emailController = TextEditingController();
+  @override
+  State<TodoListPage> createState() => _TodoListPageState();
+}
+
+class _TodoListPageState extends State<TodoListPage> {
+  List<String> todos = [];
+
+  final TextEditingController taskController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +25,10 @@ class TodoListPage extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: TextField(
-                      decoration: InputDecoration(
+                      controller: taskController,
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Adicione uma tarefa',
                         hintText: 'Ex. Estudar flutter',
@@ -29,7 +37,14 @@ class TodoListPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      String task = taskController.text;
+                      setState(() {
+                        todos.add(task);
+                      });
+
+                      taskController.clear();
+                    },
                     style: ElevatedButton.styleFrom(
                       primary: const Color(0xff00d7f3),
                       padding: const EdgeInsets.all(14)
@@ -43,18 +58,21 @@ class TodoListPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              ListView(
-                shrinkWrap: true,
-                children: [
-                  ListTile(
-                    title: const Text('Tarefa 1'),
-                    subtitle: const Text('20/11/2020'),
-                    leading: const Icon(Icons.save, size: 30),
-                    onTap: () {
-                      print('Tarefa 1');
-                    },
-                  ),
-                ],
+              Flexible(
+
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for(String todo in todos)
+                      ListTile(
+                        title: Text(todo),
+                        subtitle: const Text('20/11/2020'),
+                        onTap: () {
+                          print('Tarefa 1');
+                        },
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
               Row(
@@ -80,18 +98,5 @@ class TodoListPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void login() {
-    String text = emailController.text;
-    print(text);
-  }
-
-  void onChanged(String text) {
-    // print(text);
-  }
-
-  void onSubmited(String text) {
-    print(text);
   }
 }
