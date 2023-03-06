@@ -15,7 +15,7 @@ class TodoListPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Expanded(
+              const Expanded(
                 child: TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -24,10 +24,18 @@ class TodoListPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {},
-                child: Text('+'),
+                style: ElevatedButton.styleFrom(
+                  primary: const Color(0xff00d7f3),
+                  padding: const EdgeInsets.all(14)
+                ),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
             ],
           ),
