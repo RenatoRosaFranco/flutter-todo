@@ -68,7 +68,11 @@ class _TodoListPageState extends State<TodoListPage> {
                   child: ListView(
                     shrinkWrap: true,
                     children: [
-                      for (Todo todo in todos) TodoListItem(todo: todo)
+                      for (Todo todo in todos)
+                        TodoListItem(
+                            todo: todo,
+                            onDelete: onDelete
+                        )
                     ],
                   ),
                 ),
@@ -80,7 +84,7 @@ class _TodoListPageState extends State<TodoListPage> {
                             'Você possui ${todos.length} tarefas pendentes')),
                     const SizedBox(width: 8),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: showDeleteTodosConfirmationDialog,
                       style: ElevatedButton.styleFrom(
                           primary: const Color(0xff00d7f3),
                           padding: const EdgeInsets.all(14)),
@@ -94,5 +98,52 @@ class _TodoListPageState extends State<TodoListPage> {
         ),
       ),
     );
+  }
+
+  void showDeleteTodosConfirmationDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Limpar Tudo?', textAlign: TextAlign.center),
+              content: const Text(
+                  'Você tem certeza que deseja apagar todas as tarefas?'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: TextButton.styleFrom(
+                      primary: Color(0xff00d7f3)
+                    ),
+                    child: Text(
+                        'Cancelar'
+                    )
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    deleteAllTodos();
+                  },
+                  style: TextButton.styleFrom(
+                    primary: Colors.red
+                  ),
+                  child: Text(
+                    'Limpar Tudo'
+                  ),
+                ),
+              ],
+            ));
+  }
+
+  void onDelete(Todo todo) {
+    setState(() {
+      todos.remove(todo);
+    });
+  }
+
+  void deleteAllTodos() {
+    setState(() {
+      todos.clear();
+    });
   }
 }
