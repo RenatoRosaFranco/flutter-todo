@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled2/pages/todo_list_item.dart';
 import 'package:untitled2/models/todo.dart';
+import 'package:untitled2/repositories/todo_repository.dart';
 
 class TodoListPage extends StatefulWidget {
   TodoListPage({Key? key}) : super(key: key);
@@ -13,11 +14,12 @@ class TodoListPage extends StatefulWidget {
 
 class _TodoListPageState extends State<TodoListPage> {
 
+  final TextEditingController taskController = TextEditingController();
+  final TodoRepository todoRepository = TodoRepository();
+
   List<Todo> todos = [];
   Todo? deletedTodo;
   int? deletedTodoPos;
-
-  final TextEditingController taskController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,7 @@ class _TodoListPageState extends State<TodoListPage> {
                         });
 
                         taskController.clear();
+                        todoRepository.saveTodoList(todos);
                       },
                       style: ElevatedButton.styleFrom(
                           primary: const Color(0xff00d7f3),
