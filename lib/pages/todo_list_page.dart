@@ -12,7 +12,10 @@ class TodoListPage extends StatefulWidget {
 }
 
 class _TodoListPageState extends State<TodoListPage> {
+
   List<Todo> todos = [];
+  Todo? deletedTodo;
+  int? deletedTodoPos;
 
   final TextEditingController taskController = TextEditingController();
 
@@ -113,9 +116,9 @@ class _TodoListPageState extends State<TodoListPage> {
                       Navigator.of(context).pop();
                     },
                     style: TextButton.styleFrom(
-                      primary: Color(0xff00d7f3)
+                      primary: const Color(0xff00d7f3)
                     ),
-                    child: Text(
+                    child: const Text(
                         'Cancelar'
                     )
                 ),
@@ -127,7 +130,7 @@ class _TodoListPageState extends State<TodoListPage> {
                   style: TextButton.styleFrom(
                     primary: Colors.red
                   ),
-                  child: Text(
+                  child: const Text(
                     'Limpar Tudo'
                   ),
                 ),
@@ -136,9 +139,31 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   void onDelete(Todo todo) {
+    deletedTodo = todo;
+    deletedTodoPos = todos.indexOf(todo);
+
     setState(() {
       todos.remove(todo);
     });
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Tarefa ${todo.title} foi removida com sucesso.',
+      style: const TextStyle(
+        color: Color(0xff060708)
+      ),),
+      backgroundColor: Colors.white,
+      action: SnackBarAction(
+        label: 'Desfazer',
+        textColor: const Color(0xff00d7f3),
+        onPressed: () {
+          setState(() {
+            todos.insert(deletedTodoPos!, deletedTodo!);
+          });
+        },
+      ),
+      duration: const Duration(seconds: 5)),
+    );
   }
 
   void deleteAllTodos() {
